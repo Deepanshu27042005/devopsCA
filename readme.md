@@ -15,21 +15,21 @@ Application URL: `http://localhost:8086`
 Repository: https://hub.docker.com/r/deepanshu27m/fest-backend
 
 - `deepanshu27m/fest-backend:1.0.0`
-- `deepanshu27m/fest-backend:1.0`
-- `deepanshu27m/fest-backend:1.0.1` — unsigned verification-test image
 
 **Version 1.0.0 digest:**
 
 ```text
-sha256:148ec8566ec5607b91245bd9943ab2ef2c3504b427fb58056716cc6038d48d89
+sha256:c5cdf70f665b429df902b229caa13db7ce268d37719850224c786a0094591e15
 ```
+
+The `1.0.0` image was built from `backend/` and pushed to Docker Hub. Tags `1.0` and `1.0.1` have not been published to this repository.
 
 ## Security Measures
 - Backend runs as a non-root user.
 - Dependencies are specified in `requirements.txt`.
 - Docker Compose uses a dedicated network and persistent database volume.
 - Trivy scans the container image for vulnerabilities.
-- Cosign signs and verifies the published image by digest.
+- Cosign signing instructions are provided; the published image is not signed yet.
 - `.env` and private signing keys are excluded from Git.
 
 ## Trivy Vulnerability Results
@@ -48,30 +48,19 @@ Detailed reports: `reports/trivy-before.txt` and `reports/trivy-after.txt`.
 
 ## Cosign Signing and Verification
 
-### Sign Version 1.0.0
+The published `1.0.0` image has not yet been signed. To sign it, install Cosign and use the matching private key (not included in this repository):
 
 ```bash
 cosign sign --key cosign.key \
-  deepanshu27m/fest-backend@sha256:148ec8566ec5607b91245bd9943ab2ef2c3504b427fb58056716cc6038d48d89
+  deepanshu27m/fest-backend@sha256:c5cdf70f665b429df902b229caa13db7ce268d37719850224c786a0094591e15
 ```
 
-### Verify the Signed Image
+After signing with the key corresponding to `cosign.pub`, verify it with:
 
 ```bash
 cosign verify --key cosign.pub \
-  deepanshu27m/fest-backend@sha256:148ec8566ec5607b91245bd9943ab2ef2c3504b427fb58056716cc6038d48d89
+  deepanshu27m/fest-backend@sha256:c5cdf70f665b429df902b229caa13db7ce268d37719850224c786a0094591e15
 ```
-
-Verification succeeded for version `1.0.0`.
-
-### Verify the Unsigned Version 1.0.1
-
-```bash
-cosign verify --key cosign.pub \
-  deepanshu27m/fest-backend@sha256:7dd29a686e10279d2d1dcb6bbf2ebeec0828f5e75ae33692859a813932991ec1
-```
-
-Expected result: `no signatures found`. This confirms the unsigned test image could not be verified with the public key.
 
 ## Submission Checklist
 - Include `cosign.pub`, `.gitignore`, Docker configuration, source files, scan reports, and required assessment screenshots.
@@ -83,4 +72,4 @@ Expected result: `no signatures found`. This confirms the unsigned test image co
 ChatGPT was used for technical troubleshooting, Docker and Cosign guidance, interpreting Trivy results, and documentation assistance.
 
 ## Conclusion
-The project demonstrates container hardening, vulnerability scanning, and image signature verification. Trivy findings decreased from 24 to 8, and Cosign successfully verified the signed image while rejecting the unsigned test image.
+The project demonstrates container hardening and vulnerability scanning. Trivy findings in the included reports decreased from 24 to 8. The newly published image still needs to be signed with the matching private key before signature verification can succeed.
